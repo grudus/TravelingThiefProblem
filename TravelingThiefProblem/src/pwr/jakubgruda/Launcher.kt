@@ -29,6 +29,10 @@ fun main(args: Array<String>) {
             fitnessCalculator::calculate
     )
 
-    println(bestPath)
+    val best = population
+            .map { fitnessCalculator.calculate(it) }
+            .sortedDescending()
+
+    println(best)
 
 }

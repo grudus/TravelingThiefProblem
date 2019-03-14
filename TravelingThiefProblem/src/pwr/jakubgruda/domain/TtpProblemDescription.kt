@@ -11,7 +11,7 @@ data class TtpProblemDescription(
         val rentingRatio: Double,
         val edgeWeightType: EdgeWeightType,
         val cities: List<City>,
-        val items: List<Item>
+        val items: Knapsack
 ) {
 
     override fun toString(): String {
