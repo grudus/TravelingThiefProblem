@@ -24,8 +24,8 @@ class TtpFileLoader {
         val cities = lines
                 .drop(11)
                 .takeWhile { !it.startsWith("ITEMS SECTION") }
-                .map { it.split(Regex("\\s+")).map { it.toDouble().toInt() } }
-                .map { City(it[0], it[1], it[2]) }
+                .map { it.split(Regex("\\s+")).map { it.toDouble() } }
+                .map { City(it[0].toInt(), it[1], it[2]) }
 
         val items = lines
                 .dropWhile { !it.startsWith("ITEMS SECTION") }
