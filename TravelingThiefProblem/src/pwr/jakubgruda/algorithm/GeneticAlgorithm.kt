@@ -5,13 +5,14 @@ object GeneticAlgorithm {
     fun <T> solve(
             info: GeneticAlgorithmInfo,
             initialPopulation: List<List<T>>,
-            fitness: (List<T>) -> Double
-    ): List<T> {
+            fitness: (List<T>) -> Double,
+            afterEachPopulation: (Int, List<List<T>>) -> Unit
+    ): Double {
         var population = initialPopulation
-        var currentGeneration = 0
+        var currentGeneration = 1
         var parents: List<List<T>>
 
-        while (currentGeneration < info.numberOfGenerations) {
+        while (currentGeneration <= info.numberOfGenerations) {
 
             parents = selectParents(population, info, fitness)
 
@@ -29,19 +30,12 @@ object GeneticAlgorithm {
 
             population = children.sortedByDescending { fitness(it) }.take(children.size/2+1)
 
-            val sorted = population.map(fitness).sorted()
-            val best = sorted.last()
-            val worst = sorted.first()
-            val avg = sorted.average()
-
-
-            println("$currentGeneration,$best,$avg,$worst")
-
+            afterEachPopulation(currentGeneration, population)
             currentGeneration++
         }
 
 
-        return population.maxBy { fitness(it) }!!
+        return population.map(fitness).max()!!
     }
 
     private fun <T> selectParents(population: List<List<T>>, info: GeneticAlgorithmInfo, fitness: (List<T>) -> Double): List<List<T>> {
