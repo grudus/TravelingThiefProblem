@@ -28,7 +28,7 @@ object GeneticAlgorithm {
                 children += Mutation.perform(child2, info.mutationProbability)
             }
 
-            population = children.sortedByDescending { fitness(it) }.take(children.size/2+1)
+            population = children.toList()
 
             afterEachPopulation(currentGeneration, population)
             currentGeneration++
@@ -41,7 +41,7 @@ object GeneticAlgorithm {
     private fun <T> selectParents(population: List<List<T>>, info: GeneticAlgorithmInfo, fitness: (List<T>) -> Double): List<List<T>> {
         val parents = mutableListOf<List<T>>()
 
-        while (parents.size < population.size) {
+        while (parents.size <= population.size / 2) {
             val tournament = population
                     .shuffled()
                     .take(info.tournamentSize)
