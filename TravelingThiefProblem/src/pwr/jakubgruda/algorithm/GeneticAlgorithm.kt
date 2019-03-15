@@ -20,7 +20,7 @@ object GeneticAlgorithm {
             val children = mutableListOf<List<T>>()
             for (i in 0 until parents.size - 1) {
                 val parent1 = parents[i]
-                val parent2 = parents[i+1]
+                val parent2 = parents[i + 1]
 
                 val (child1, child2) = Crossover.perform(parent1, parent2, info.crossoverProbability)
 
