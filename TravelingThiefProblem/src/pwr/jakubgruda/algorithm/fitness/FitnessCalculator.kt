@@ -7,10 +7,15 @@ import pwr.jakubgruda.domain.TtpProblemDescription
 class FitnessCalculator(private val description: TtpProblemDescription) {
     private val itemsInCities: Map<Int, List<Item>> = description.items
             .groupBy { it.assignedNodeNumber }
+    private val cache = mutableMapOf<Path, Double>()
 
     private val deltaV = description.maxSpeed - description.minSpeed
 
     fun calculate(path: Path): Double {
+        if (cache.containsKey(path)) {
+            return cache[path]!!
+        }
+
         val knapsack = mutableListOf<Item>()
         var totalTime = 0.0
 
@@ -34,7 +39,9 @@ class FitnessCalculator(private val description: TtpProblemDescription) {
             totalTime += distance / velocity
         }
 
-        return knapsack.sumBy { it.profit } - totalTime
+        val fitness = knapsack.sumBy { it.profit } - totalTime
+        cache[path] = fitness
+        return fitness
     }
 
 }

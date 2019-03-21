@@ -5,6 +5,7 @@ import pwr.jakubgruda.algorithm.GeneticAlgorithm
 import pwr.jakubgruda.algorithm.GeneticAlgorithmInfo
 import pwr.jakubgruda.algorithm.InitialPopulationGenerator
 import pwr.jakubgruda.algorithm.crossover.OxCrossover
+import pwr.jakubgruda.algorithm.mutation.ReverseSectionMutation
 import pwr.jakubgruda.algorithm.mutation.SinglePointMutation
 import pwr.jakubgruda.algorithm.selection.TournamentSelection
 import pwr.jakubgruda.domain.Path
@@ -16,10 +17,10 @@ private const val LEVEL = "hard"
 private const val FILE_PATH = "TravelingThiefProblem/res/${LEVEL}_1.ttp"
 
 
-private const val POPULATION_SIZE = 100
-private const val TOURNAMENT_SIZE = 10
-private const val NUMBER_OF_GENERATIONS = 100
-private const val MUTATION_PROBABILITY = 0.3
+private const val POPULATION_SIZE = 500
+private const val TOURNAMENT_SIZE = POPULATION_SIZE / 10
+private const val NUMBER_OF_GENERATIONS = 1000
+private const val MUTATION_PROBABILITY = 0.25
 private const val CROSSOVER_PROBABILITY = 0.7
 
 private const val RESULT_FILE_PATTERN = "TravelingThiefProblem/results/%d___lvl-${LEVEL}_pop-${POPULATION_SIZE}_gen-${NUMBER_OF_GENERATIONS}_mut-${MUTATION_PROBABILITY}_cros-${CROSSOVER_PROBABILITY}.csv"
@@ -40,7 +41,7 @@ fun main(args: Array<String>) {
             initialPopulation,
             TournamentSelection(),
             OxCrossover(),
-            SinglePointMutation(),
+            ReverseSectionMutation(),
             fitnessCalculator::calculate
     ) { gen, population -> writeGenerationToFile(gen, population, fitnessCalculator, resultsFile)}
 }
