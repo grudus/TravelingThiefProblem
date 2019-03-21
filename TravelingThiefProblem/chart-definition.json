@@ -1,0 +1,42 @@
+{
+    "size": {
+        "height": 600,
+        "width": 1200
+    },
+    "series": {
+        "x": "Generation",
+        "Best": "Best",
+        "Average": "Average",
+        "Worst": "Worst"
+    },
+    "data": {
+        "x": "x",
+        "type": "line"
+    },
+    "axis": {
+        "x": {
+            "type": "indexed",
+            "label": {
+                "text": "Generation number",
+                "position": "middle"
+            }
+        },
+        "y": {
+            "label": {
+                "text": "Value",
+                "position": "outer-middle"
+            }
+        }
+    },
+    "grid": {
+        "x": {
+            "show": true
+        },
+        "y": {
+            "show": true
+        }
+    },
+    "point": {
+        "show": false
+    }
+}
