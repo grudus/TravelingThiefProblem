@@ -16,12 +16,14 @@ class FitnessCalculator(private val description: TtpProblemDescription) {
 
         for (i in 0 until path.size - 1) {
             val cityA = path[i]
-            val cityB = path[i+1]
+            val cityB = path[i + 1]
 
-            val itemToTake = itemsInCities[cityA.index]?.maxBy { it.profit / it.weight }
             val knapsackWeight = knapsack.sumBy { it.weight }
+            val itemToTake = itemsInCities[cityA.index]
+                    ?.filter { knapsackWeight + it.weight < description.capacityOfKnapsack }
+                    ?.maxBy { it.profit }
 
-            if (itemToTake != null && knapsackWeight + itemToTake.weight < description.capacityOfKnapsack) {
+            if (itemToTake != null) {
                 knapsack += itemToTake
             }
             val newKnapsackWeight = knapsackWeight + (itemToTake?.weight ?: 0)

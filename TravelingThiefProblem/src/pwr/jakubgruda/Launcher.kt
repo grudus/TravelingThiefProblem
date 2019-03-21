@@ -9,14 +9,14 @@ import pwr.jakubgruda.io.TtpFileLoader
 import java.io.File
 import java.util.*
 
-private const val LEVEL = "medium"
+private const val LEVEL = "hard"
 private const val FILE_PATH = "TravelingThiefProblem/res/${LEVEL}_1.ttp"
 
 
 private const val POPULATION_SIZE = 100
-private const val TOURNAMENT_SIZE = 15
-private const val NUMBER_OF_GENERATIONS = 500
-private const val MUTATION_PROBABILITY = 0.2
+private const val TOURNAMENT_SIZE = 10
+private const val NUMBER_OF_GENERATIONS = 100
+private const val MUTATION_PROBABILITY = 0.3
 private const val CROSSOVER_PROBABILITY = 0.7
 
 private const val RESULT_FILE_PATTERN = "TravelingThiefProblem/results/%d___lvl-${LEVEL}_pop-${POPULATION_SIZE}_gen-${NUMBER_OF_GENERATIONS}_mut-${MUTATION_PROBABILITY}_cros-${CROSSOVER_PROBABILITY}.csv"
