@@ -2,19 +2,19 @@ package pwr.jakubgruda.algorithm.selection
 
 import pwr.jakubgruda.algorithm.GeneticAlgorithmInfo
 
-class TournamentSelection: Selection {
+class TournamentSelection : Selection {
 
 
     override fun <T> selectParents(population: List<List<T>>, info: GeneticAlgorithmInfo, fitness: (List<T>) -> Double): List<List<T>> {
-        val parents = mutableListOf<List<T>>()
+        val copy = population.toList()
 
-        while (parents.size <= population.size / 2) {
-            val tournament = population
+        return generateSequence {
+            copy
                     .shuffled()
                     .take(info.tournamentSize)
-
-            parents += tournament.maxBy { fitness(it) }!!
+                    .maxBy(fitness)
         }
-        return parents.toList()
+                .take(population.size / 2 + 1)
+                .toList()
     }
 }
