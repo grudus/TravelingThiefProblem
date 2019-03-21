@@ -1,10 +1,10 @@
-package pwr.jakubgruda.algorithm
+package pwr.jakubgruda.algorithm.mutation
 
 import kotlin.random.Random
 
-object Mutation {
+class SinglePointMutation: Mutation {
 
-    fun <T> perform(chromosome: List<T>, probability: Double): List<T> {
+    override fun <T> perform(chromosome: List<T>, probability: Double): List<T> {
         val shouldPerform = Random.nextDouble(0.0, 1.0) <= probability
 
         return if (shouldPerform)

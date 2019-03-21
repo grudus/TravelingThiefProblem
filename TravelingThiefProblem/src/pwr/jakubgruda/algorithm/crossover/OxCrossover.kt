@@ -1,12 +1,11 @@
-package pwr.jakubgruda.algorithm
+package pwr.jakubgruda.algorithm.crossover
 
 import java.util.*
 import kotlin.random.Random
 
-object Crossover {
+class OxCrossover: Crossover {
 
-
-    fun <T> perform(parent1: List<T>, parent2: List<T>, probability: Double): Pair<List<T>, List<T>> {
+    override fun <T> perform(parent1: List<T>, parent2: List<T>, probability: Double): Pair<List<T>, List<T>> {
         val shouldPerform = Random.nextDouble(0.0, 1.0) <= probability
 
         return if (shouldPerform)
@@ -54,8 +53,5 @@ object Crossover {
 
         return Pair(child1, child2)
     }
+
 }
-
-
-//abcde   -> ade
-//dcaeb   -> daebc

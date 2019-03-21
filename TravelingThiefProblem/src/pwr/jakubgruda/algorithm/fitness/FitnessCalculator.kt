@@ -1,4 +1,4 @@
-package pwr.jakubgruda.algorithm
+package pwr.jakubgruda.algorithm.fitness
 
 import pwr.jakubgruda.domain.Item
 import pwr.jakubgruda.domain.Path
