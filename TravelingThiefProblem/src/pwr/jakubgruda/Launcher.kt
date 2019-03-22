@@ -3,18 +3,15 @@ package pwr.jakubgruda
 import pwr.jakubgruda.algorithm.GeneticAlgorithm
 import pwr.jakubgruda.algorithm.GeneticAlgorithmInfo
 import pwr.jakubgruda.algorithm.InitialPopulationGenerator
-import pwr.jakubgruda.algorithm.chart.ChartCreator
+import pwr.jakubgruda.io.ChartCreator
 import pwr.jakubgruda.algorithm.crossover.OxCrossover
 import pwr.jakubgruda.algorithm.fitness.FitnessCalculator
 import pwr.jakubgruda.algorithm.mutation.ReverseSectionMutation
-import pwr.jakubgruda.algorithm.selection.OnlyBestSelection
-import pwr.jakubgruda.algorithm.selection.ReplicateNBestSelection
 import pwr.jakubgruda.algorithm.selection.RouletteSelection
-import pwr.jakubgruda.algorithm.selection.TournamentSelection
 import pwr.jakubgruda.domain.Path
+import pwr.jakubgruda.io.CsvResultsWriter
 import pwr.jakubgruda.io.TtpFileLoader
 import java.io.File
-import java.lang.RuntimeException
 import java.util.*
 
 private const val LEVEL = "hard"
@@ -33,12 +30,12 @@ fun main(args: Array<String>) {
     println("__ Traveling Thief Problem __")
     val description = TtpFileLoader().load(File(FILE_PATH))
 
+    val resultsFile = File(String.format(RESULT_FILE_PATTERN, Date().time))
+    val csvResultsWriter = CsvResultsWriter(resultsFile)
+    csvResultsWriter.writeHeaders()
+
     val initialPopulation = InitialPopulationGenerator.generate(description, POPULATION_SIZE)
     val fitnessCalculator = FitnessCalculator(description)
-
-
-    val resultsFile = File(String.format(RESULT_FILE_PATTERN, Date().time))
-    resultsFile.writeText("Generation,Best,Average,Worst")
 
     GeneticAlgorithm.solve(
             GeneticAlgorithmInfo(MUTATION_PROBABILITY, CROSSOVER_PROBABILITY, NUMBER_OF_GENERATIONS),
@@ -47,13 +44,23 @@ fun main(args: Array<String>) {
             OxCrossover(),
             ReverseSectionMutation(),
             fitnessCalculator::calculate
-    ) { gen, population -> writeGenerationToFile(gen, population, fitnessCalculator, resultsFile)}
+    ) { gen, population -> writeGenerationToFile(gen, population, fitnessCalculator, csvResultsWriter)}
 
-
-    ChartCreator(CHART_DEFINITION_PATH).create(resultsFile)
+    generateChart(resultsFile)
 }
 
-private fun writeGenerationToFile(generation: Int, population: List<Path>, fitnessCalculator: FitnessCalculator, file: File) {
+private fun generateChart(resultsFile: File) {
+    val chartCreator = ChartCreator(CHART_DEFINITION_PATH)
+    if (!chartCreator.isCreationAvailable()) {
+        System.err.println("Cannot generate chart")
+        return
+    }
+    println("\nStart generating chart from file ${resultsFile.absolutePath}")
+    chartCreator.create(resultsFile)
+    println("Chart successfully generated")
+}
+
+private fun writeGenerationToFile(generation: Int, population: List<Path>, fitnessCalculator: FitnessCalculator, csvResultsWriter: CsvResultsWriter) {
     val sorted = population.map(fitnessCalculator::calculate).sorted()
     val best = sorted.last()
     val worst = sorted.first()
@@ -61,5 +68,5 @@ private fun writeGenerationToFile(generation: Int, population: List<Path>, fitne
 
     print("\r${100 * generation / NUMBER_OF_GENERATIONS}%")
 
-    file.appendText("\n$generation,$best,$avg,$worst")
+    csvResultsWriter.appendData(generation, best, avg, worst)
 }
