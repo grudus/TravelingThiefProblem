@@ -21,7 +21,7 @@ object GeneticAlgorithm {
 
         while (currentGeneration <= info.numberOfGenerations) {
 
-            parents = selection.selectParents(population, info, fitness)
+            parents = selection.selectParents(population, fitness)
 
             val children = mutableListOf<List<T>>()
             for (i in 0 until parents.size - 1) {

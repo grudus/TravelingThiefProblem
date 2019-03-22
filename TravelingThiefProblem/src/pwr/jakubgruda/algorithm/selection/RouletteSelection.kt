@@ -1,11 +1,10 @@
 package pwr.jakubgruda.algorithm.selection
 
-import pwr.jakubgruda.algorithm.GeneticAlgorithmInfo
 import kotlin.random.Random
 
 class RouletteSelection: Selection {
 
-    override fun <T> selectParents(population: List<List<T>>, info: GeneticAlgorithmInfo, fitness: (List<T>) -> Double): List<List<T>> {
+    override fun <T> selectParents(population: List<List<T>>, fitness: (List<T>) -> Double): List<List<T>> {
         val finesses = population.map(fitness)
         val minWeight = finesses.min()!!
 

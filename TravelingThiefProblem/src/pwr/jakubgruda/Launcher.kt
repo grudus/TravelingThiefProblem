@@ -21,7 +21,7 @@ private const val LEVEL = "hard"
 private const val FILE_PATH = "TravelingThiefProblem/res/${LEVEL}_1.ttp"
 private const val CHART_DEFINITION_PATH = "TravelingThiefProblem/chart-definition.json"
 
-private const val POPULATION_SIZE = 500
+private const val POPULATION_SIZE = 300
 private const val TOURNAMENT_SIZE = POPULATION_SIZE / 10
 private const val NUMBER_OF_GENERATIONS = 1000
 private const val MUTATION_PROBABILITY = 0.25
@@ -41,9 +41,9 @@ fun main(args: Array<String>) {
     resultsFile.writeText("Generation,Best,Average,Worst")
 
     GeneticAlgorithm.solve(
-            GeneticAlgorithmInfo(MUTATION_PROBABILITY, CROSSOVER_PROBABILITY, NUMBER_OF_GENERATIONS, TOURNAMENT_SIZE),
+            GeneticAlgorithmInfo(MUTATION_PROBABILITY, CROSSOVER_PROBABILITY, NUMBER_OF_GENERATIONS),
             initialPopulation,
-            ReplicateNBestSelection(2),
+            TournamentSelection(TOURNAMENT_SIZE),
             OxCrossover(),
             ReverseSectionMutation(),
             fitnessCalculator::calculate
