@@ -34,14 +34,23 @@ class FitnessCalculator(private val description: TtpProblemDescription) {
             val newKnapsackWeight = knapsackWeight + (itemToTake?.weight ?: 0)
 
             val distance = cityA.distanceTo(cityB)
-            val velocity = description.maxSpeed - (newKnapsackWeight / description.capacityOfKnapsack) * deltaV
+            val velocity = calculateVelocity(newKnapsackWeight)
 
             totalTime += distance / velocity
         }
+
+        val totalKnapsackWeight = knapsack.sumBy { it.weight }
+        val returnToFirstCityVelocity = calculateVelocity(totalKnapsackWeight)
+        val returnToFirstCityDistance = path.last().distanceTo(path.first())
+
+        totalTime += returnToFirstCityDistance / returnToFirstCityVelocity
 
         val fitness = knapsack.sumBy { it.profit } - totalTime
         cache[path] = fitness
         return fitness
     }
+
+    private fun calculateVelocity(knapsackWeight: Int): Double =
+            description.maxSpeed - (knapsackWeight / description.capacityOfKnapsack) * deltaV
 
 }
