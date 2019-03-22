@@ -6,27 +6,33 @@ class RouletteSelection: Selection {
 
     override fun <T> selectParents(population: List<List<T>>, fitness: (List<T>) -> Double): List<List<T>> {
         val finesses = population.map(fitness)
-        val minWeight = finesses.min()!!
+        val min = finesses.min()!!
 
-        val weighs = finesses.map { it + Math.abs(minWeight) }
-                .map { 7 * it * it }
-        val sum = weighs.sum()
+        val weighs = finesses.map { 3 * (it + Math.abs(min * 1.05))}
 
-        return generateSequence { population[findIndex(weighs, sum)] }
-                .take(population.size / 2 + 1)
-                .toList()
+        return doSelect(weighs, population)
      }
 
-    private fun findIndex(weighs: List<Double>, sum: Double): Int {
-        val guess = Random.nextDouble() * sum
+    private fun <T> doSelect(weighs: List<Double>, population: List<List<T>>): MutableList<List<T>> {
+        val sum = weighs.sum()
+        val parents = mutableListOf<List<T>>()
 
-        var rouletteValue = guess
+        val sortedWeights = weighs.zip(population)
+                .sortedByDescending { it.first }
 
-        for (i in weighs.indices) {
-            rouletteValue -= weighs[i]
-            if (rouletteValue < 0)
-                return i
+        while (true) {
+            val roulette = Random.nextDouble() * sum
+
+            for ((weight, genotype) in sortedWeights) {
+                if (weight > roulette) {
+                    parents += genotype
+                    if (parents.size >= population.size / 2 + 1) {
+                        return parents
+                    }
+                }
+                else // because there are sorted, all weights after that won't fit this predicate
+                    break
+            }
         }
-        return weighs.lastIndex
     }
 }
