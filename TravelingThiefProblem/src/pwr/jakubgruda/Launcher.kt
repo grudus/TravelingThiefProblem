@@ -7,10 +7,14 @@ import pwr.jakubgruda.algorithm.chart.ChartCreator
 import pwr.jakubgruda.algorithm.crossover.OxCrossover
 import pwr.jakubgruda.algorithm.fitness.FitnessCalculator
 import pwr.jakubgruda.algorithm.mutation.ReverseSectionMutation
+import pwr.jakubgruda.algorithm.selection.OnlyBestSelection
+import pwr.jakubgruda.algorithm.selection.ReplicateNBestSelection
+import pwr.jakubgruda.algorithm.selection.RouletteSelection
 import pwr.jakubgruda.algorithm.selection.TournamentSelection
 import pwr.jakubgruda.domain.Path
 import pwr.jakubgruda.io.TtpFileLoader
 import java.io.File
+import java.lang.RuntimeException
 import java.util.*
 
 private const val LEVEL = "hard"
@@ -39,7 +43,7 @@ fun main(args: Array<String>) {
     GeneticAlgorithm.solve(
             GeneticAlgorithmInfo(MUTATION_PROBABILITY, CROSSOVER_PROBABILITY, NUMBER_OF_GENERATIONS, TOURNAMENT_SIZE),
             initialPopulation,
-            TournamentSelection(),
+            ReplicateNBestSelection(2),
             OxCrossover(),
             ReverseSectionMutation(),
             fitnessCalculator::calculate
