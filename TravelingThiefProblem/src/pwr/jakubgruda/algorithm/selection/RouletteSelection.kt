@@ -2,26 +2,26 @@ package pwr.jakubgruda.algorithm.selection
 
 import kotlin.random.Random
 
-class RouletteSelection: Selection {
+class RouletteSelection(private val alpha: Double = 1.05, private val beta: Double = 3.0): Selection {
 
     override fun <T> selectParents(population: List<List<T>>, fitness: (List<T>) -> Double): List<List<T>> {
         val finesses = population.map(fitness)
         val min = finesses.min()!!
 
-        val weighs = finesses.map { 3 * (it + Math.abs(min * 1.05))}
+        val weighs = finesses.map { beta * (it + Math.abs(min * alpha))}
 
         return doSelect(weighs, population)
      }
 
     private fun <T> doSelect(weighs: List<Double>, population: List<List<T>>): MutableList<List<T>> {
-        val sum = weighs.sum()
+        val max = weighs.max()!!
         val parents = mutableListOf<List<T>>()
 
         val sortedWeights = weighs.zip(population)
                 .sortedByDescending { it.first }
 
         while (true) {
-            val roulette = Random.nextDouble() * sum
+            val roulette = Random.nextDouble() * max
 
             for ((weight, genotype) in sortedWeights) {
                 if (weight > roulette) {
@@ -30,7 +30,7 @@ class RouletteSelection: Selection {
                         return parents
                     }
                 }
-                else // because there are sorted, all weights after that won't fit this predicate
+                else // because they're sorted, all weights after that won't fit this predicate
                     break
             }
         }
